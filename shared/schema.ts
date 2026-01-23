@@ -28,6 +28,15 @@ export const channels = pgTable("channels", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const ads = pgTable("ads", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  channelId: integer("channel_id").notNull(),
+  date: timestamp("date").notNull(),
+  status: text("status").notNull().default("scheduled"), // scheduled, completed, cancelled
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const cartItems = pgTable("cart_items", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(), // In a real app with session auth, could be null for guest but we'll assume auth
@@ -64,6 +73,7 @@ export type InsertChannel = z.infer<typeof insertChannelSchema>;
 export type CartItem = typeof cartItems.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
+export type Ad = typeof ads.$inferSelect;
 
 // Request/Response Types
 export type ChannelFilter = {
