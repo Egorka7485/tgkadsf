@@ -1,6 +1,6 @@
 
 import { z } from 'zod';
-import { insertChannelSchema, insertCartItemSchema, channels, cartItems, orders } from './schema';
+import { insertChannelSchema, insertCartItemSchema, channels, cartItems, orders, type User } from './schema';
 
 export const errorSchemas = {
   validation: z.object({
@@ -23,6 +23,7 @@ export const api = {
       input: z.object({
         search: z.string().optional(),
         category: z.string().optional(),
+        platform: z.string().optional(),
         minPrice: z.coerce.number().optional(),
         maxPrice: z.coerce.number().optional(),
         minSubs: z.coerce.number().optional(),
@@ -94,7 +95,7 @@ export const api = {
       method: 'GET' as const,
       path: '/api/user',
       responses: {
-        200: z.custom<typeof import('./schema').User>().nullable(),
+        200: z.custom<User>().nullable(),
       },
     }
   }

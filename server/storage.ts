@@ -57,6 +57,9 @@ export class DatabaseStorage implements IStorage {
     if (filter?.category) {
       conditions.push(eq(channels.category, filter.category));
     }
+    if (filter?.platform) {
+      conditions.push(eq(channels.platform, filter.platform));
+    }
     if (filter?.minPrice) {
       conditions.push(gte(channels.price, filter.minPrice));
     }
@@ -80,6 +83,10 @@ export class DatabaseStorage implements IStorage {
   async createChannel(channel: InsertChannel): Promise<Channel> {
     const [newChannel] = await db.insert(channels).values(channel).returning();
     return newChannel;
+  }
+
+  async deleteAllChannels(): Promise<void> {
+    await db.delete(channels);
   }
 
   async getCartItems(userId: number): Promise<(CartItem & { channel: Channel })[]> {

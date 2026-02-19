@@ -41,17 +41,13 @@ export function ChannelCard({ channel }: ChannelCardProps) {
         <div className="relative shrink-0">
           <div className="w-14 h-14 rounded-full bg-zinc-800 overflow-hidden">
             {/* Descriptive comment for Unsplash: Abstract gradient for channel avatar */}
-            <img 
-              src={channel.avatarUrl || "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=200&h=200&fit=crop"} 
+            <img
+              src={channel.avatarUrl || "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=200&h=200&fit=crop"}
               alt={channel.name}
               className="w-full h-full object-cover"
             />
           </div>
-          {channel.verified && (
-            <div className="absolute -bottom-1 -right-1 bg-[#1c1c1e] rounded-full p-0.5">
-              <CheckCircle2 className="w-5 h-5 text-primary fill-current" />
-            </div>
-          )}
+
         </div>
 
         {/* Info */}
@@ -61,7 +57,7 @@ export function ChannelCard({ channel }: ChannelCardProps) {
               {channel.name}
             </h3>
             <span className="font-bold text-white whitespace-nowrap bg-zinc-800/50 px-2 py-0.5 rounded-md text-sm">
-              ${channel.price}
+              {(channel.price * 300).toLocaleString()} ₽
             </span>
           </div>
           

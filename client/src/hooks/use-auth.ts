@@ -4,9 +4,11 @@ import type { User } from "@shared/models/auth";
 async function fetchUser(): Promise<User | null> {
   const response = await fetch("/api/auth/user", {
     credentials: "include",
+    cache: "no-cache",
   });
 
-  if (response.status === 401) {
+  // Treat 304 (Not Modified) and 401 (Unauthorized) as not authenticated
+  if (response.status === 304 || response.status === 401) {
     return null;
   }
 
@@ -28,6 +30,8 @@ export function useAuth() {
     queryFn: fetchUser,
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false, // Prevent refetching when window regains focus
+    refetchInterval: false, // Disable automatic refetching
   });
 
   const logoutMutation = useMutation({

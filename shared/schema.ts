@@ -1,15 +1,16 @@
 
-import { pgTable, text, serial, integer, boolean, timestamp, real, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, real, serial, timestamp, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   email: text("email"),
   avatarUrl: text("avatar_url"),
-  balance: decimal("balance", { precision: 10, scale: 2 }).default("0"),
-  isAdmin: boolean("is_admin").default(false),
+  balance: real("balance").default(0),
+  isAdmin: integer("is_admin").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -20,10 +21,11 @@ export const channels = pgTable("channels", {
   username: text("channel_username").notNull(), // e.g. @channel
   avatarUrl: text("avatar_url").notNull(),
   category: text("category").notNull(),
+  platform: text("platform").notNull().default("telegram"), // telegram or tiktok
   subscribers: integer("subscribers").notNull(),
   views: integer("views").notNull(), // Average views
   err: real("err").notNull(), // Engagement rate
-  price: integer("price").notNull(), // Price in RUB/Currency
+  price: integer("price").notNull(), // Price in TON
   verified: boolean("verified").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -32,7 +34,7 @@ export const ads = pgTable("ads", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
   channelId: integer("channel_id").notNull(),
-  date: timestamp("date").notNull(),
+  date: text("date").notNull(),
   status: text("status").notNull().default("scheduled"), // scheduled, completed, cancelled
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -64,6 +66,7 @@ export const insertUserSchema = createInsertSchema(users).omit({ id: true, creat
 export const insertChannelSchema = createInsertSchema(channels).omit({ id: true, createdAt: true });
 export const insertCartItemSchema = createInsertSchema(cartItems).omit({ id: true, createdAt: true });
 export const insertOrderSchema = createInsertSchema(orders).omit({ id: true, createdAt: true });
+export const insertAdSchema = createInsertSchema(ads).omit({ id: true, createdAt: true });
 
 // Types
 export type User = typeof users.$inferSelect;
@@ -81,4 +84,5 @@ export type ChannelFilter = {
   minPrice?: number;
   maxPrice?: number;
   minSubs?: number;
+  platform?: string;
 };

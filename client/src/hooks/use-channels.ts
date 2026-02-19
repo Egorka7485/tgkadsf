@@ -11,6 +11,7 @@ export function useChannels(filters?: ChannelFilter) {
       if (filters) {
         if (filters.search) params.append("search", filters.search);
         if (filters.category) params.append("category", filters.category);
+        if (filters.platform) params.append("platform", filters.platform);
         if (filters.minPrice) params.append("minPrice", filters.minPrice.toString());
         if (filters.maxPrice) params.append("maxPrice", filters.maxPrice.toString());
         if (filters.minSubs) params.append("minSubs", filters.minSubs.toString());
@@ -25,7 +26,7 @@ export function useChannels(filters?: ChannelFilter) {
 }
 
 // GET /api/channels/:id
-export function useChannel(id: number) {
+export function useChannel(id: string) {
   return useQuery({
     queryKey: [api.channels.get.path, id],
     queryFn: async () => {
