@@ -32,6 +32,7 @@ export async function registerRoutes(
       const channels = await storage.getChannels(input);
       res.json(channels);
     } catch (err) {
+      console.error("Error in GET /api/channels:", err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   });
